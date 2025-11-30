@@ -15,4 +15,4 @@ node server.js
 
 ## Credits and Attribution
 
-This project uses the [Material Design Icons](github.com) provided by Google, licensed under the Apache License 2.0.
+This project uses the [Material Design Icons](github.com/google) provided by Google, licensed under the Apache License 2.0.

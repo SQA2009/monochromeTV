@@ -1,0 +1,398 @@
+:root {
+  --bg-app: #000000;
+  --bg-surface: #121212;
+  --text-primary: #ffffff;
+  --text-secondary: #cccccc;
+  --accent: #E60023;
+  --sidebar-width: 96px;
+  --card-size: 220px;
+  --tag-blue: #1CD9CA;
+  --tag-gold: #FFD700;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  font-family: 'Montserrat', 'Roboto', sans-serif;
+  overflow-x: hidden;
+  width: 100vw;
+}
+
+/* --- Sidebar --- */
+.sidebar {
+  width: var(--sidebar-width);
+  background-color: #080808;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 40px;
+  /* FIX: Increased padding ensures Settings button is above the Player (110px + buffer) */
+  padding-bottom: 150px; 
+  position: fixed;
+  height: 100vh;
+  z-index: 3000;
+  border-right: 1px solid #222;
+  box-sizing: border-box;
+}
+
+/* Updated Logo Style for Image */
+.sidebar-logo {
+  width: 56px; /* Slightly larger for visibility */
+  height: 56px;
+  margin-bottom: 48px;
+  object-fit: contain; /* Ensures logo doesn't stretch */
+  /* Removed red background/shadow since it's now a PNG */
+}
+
+.nav-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 32px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-btn img {
+  width: 26px;
+  height: 26px;
+  opacity: 0.9;
+  filter: invert(1) brightness(2);
+}
+
+.nav-btn.active {
+  background-color: #ffffff;
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+.nav-btn.active img { filter: invert(0); opacity: 1; }
+.nav-btn:focus, .nav-btn:hover { outline: none; border-color: #ffffff; background-color: #333; }
+.nav-btn:focus img, .nav-btn:hover img { filter: invert(1); }
+
+/* Helper to push items to bottom of flex container */
+.mt-auto {
+  margin-top: auto;
+}
+
+/* --- Main Layout --- */
+.app-layout { 
+  display: flex; 
+  min-height: 100vh; 
+  width: 100%; 
+}
+
+.main-content {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  padding: 0 0 140px 0; /* Extra padding for player */
+  background: linear-gradient(180deg, #141414 0%, #000 40%);
+  width: calc(100vw - var(--sidebar-width)); /* Explicit width to prevent overflow */
+  overflow-x: hidden; /* Crucial: Stops search bar from flying away */
+  position: relative;
+}
+
+.top-header {
+  padding: 30px 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 900;
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(10px);
+}
+
+.user-pill { 
+  display: flex; 
+  align-items: center; 
+  gap: 12px; 
+  background: #222; 
+  padding: 6px 16px 6px 6px; 
+  border-radius: 50px; 
+  color:#fff; 
+  border:1px solid #333; 
+  font-size: 1.1rem;     /* ← added from second */
+  font-weight: 600;      /* ← added from second */
+}
+
+/* --- Sections --- */
+.content-padding { padding: 20px 50px; }
+
+.section-title { 
+  font-size: 1.8rem; 
+  font-weight: 700; 
+  margin: 40px 0 20px 0; 
+  padding-left: 50px; 
+  color: #ffffff; 
+}
+
+.horizontal-scroll-container {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  padding: 10px 50px 40px 50px;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.horizontal-scroll-container::-webkit-scrollbar { display: none; }
+
+/* --- Cards --- */
+.tv-card {
+  min-width: var(--card-size);
+  width: var(--card-size);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.tv-card-img-wrapper { 
+  width: 100%; 
+  aspect-ratio: 1/1; 
+  border-radius: 8px; 
+  overflow: hidden; 
+  background: #333; 
+  transition: all 0.2s ease; 
+  border: 3px solid transparent; 
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);   /* ← added from second */
+}
+
+.tv-card.artist .tv-card-img-wrapper { border-radius: 50%; }
+
+.tv-card img { width: 100%; height: 100%; object-fit: cover; }
+
+.tv-card-title { 
+  font-size: 1.1rem; 
+  font-weight: 600; 
+  color: #fff; 
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+}
+
+.tv-card-subtitle { font-size: 0.9rem; color: #aaa; }
+
+.tv-card:focus { outline: none; }
+.tv-card:focus .tv-card-img-wrapper,
+.tv-card:hover .tv-card-img-wrapper {     /* ← :hover added from second */
+  border: 4px solid #fff;
+  transform: scale(1.05);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.8);
+}
+
+/* === NEW SECTIONS FROM SECOND FILE (completely missing in first) === */
+
+.hero-banner {
+  margin: 20px 50px;
+  height: 35vh;
+  border-radius: 16px;
+  background: linear-gradient(90deg, #5e0a0a, #111);
+  display: flex;
+  align-items: flex-end;
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-content h1 { font-size: 3.5rem; margin: 0; color: #fff; }
+.hero-content p { font-size: 1.4rem; color: #ddd; margin: 10px 0 0 0; }
+
+/* --- Player --- */
+.player-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100vw;
+  height: 110px;
+  background: rgba(10, 10, 10, 0.98);
+  border-top: 1px solid #333;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 50px;
+  z-index: 4000;
+  box-sizing: border-box;
+  backdrop-filter: blur(20px);            /* ← enhanced from second */
+  box-shadow: 0 -10px 40px rgba(0,0,0,0.5); /* ← added from second */
+}
+
+.player-info { 
+  display: flex; 
+  align-items: center; 
+  gap: 20px; 
+  width: 350px; 
+}
+
+.player-art-wrapper { 
+  width: 64px; 
+  height: 64px; 
+  border-radius: 8px;       /* ← updated from second */
+  overflow: hidden; 
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);  /* ← added from second */
+}
+
+.player-art-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+
+.player-text { display: flex; flex-direction: column; justify-content: center; }
+
+.player-title { 
+  font-weight: bold; 
+  font-size: 1.1rem;       /* kept 1.1rem from first (second had 1.15rem) */
+  color: #fff; 
+  margin-bottom: 4px; 
+}
+
+.player-artist { 
+  font-size: 0.9rem; 
+  color: #ccc; 
+  display: flex; 
+  align-items: center; 
+  gap: 8px;                 /* ← added from second */
+}
+
+.lossless-badge {
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 3px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+  margin-left: 8px;
+  text-transform: uppercase;
+  display: inline-block;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.tag-lossless {
+  background: rgba(28, 217, 202, 0.15);
+  color: var(--tag-blue);
+  border: 1px solid var(--tag-blue);
+  box-shadow: 0 0 8px rgba(28, 217, 202, 0.2);
+}
+
+.tag-hires {
+  background: linear-gradient(45deg, #FFD700, #FDB931);
+  color: #000;
+  border: 1px solid #FFD700;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+}
+
+.player-controls { 
+  display: flex; 
+  align-items: center; 
+  gap: 24px; 
+}
+
+.control-btn { 
+  background: transparent; 
+  border: none; 
+  cursor: pointer; 
+  color: #fff; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  border-radius: 50%; 
+  transition: transform 0.2s;     /* ← added from second */
+}
+
+.control-btn:hover { 
+  transform: scale(1.1); 
+  background: rgba(255,255,255,0.1);   /* ← added from second */
+}
+
+.control-btn img,
+.control-btn svg { filter: invert(1); width: 28px; height: 28px; opacity: 0.8; }
+
+.control-btn.large { 
+  width: 56px; 
+  height: 56px; 
+  background: #fff; 
+  box-shadow: 0 4px 12px rgba(255,255,255,0.3);   /* ← added from second */
+}
+
+.control-btn.large:hover { background: #eee; transform: scale(1.05); }
+
+.control-btn.large img,
+.control-btn.large svg { filter: invert(0); width: 24px; height: 24px; }
+
+.player-progress { 
+  display: flex; 
+  align-items: center; 
+  gap: 16px; 
+  width: 400px; 
+}
+
+.time-text { 
+  color: #888; 
+  font-size: 0.85rem; 
+  font-family: monospace; 
+  font-variant-numeric: tabular-nums;   /* ← added from second */
+}
+
+.progress-bar-bg { 
+  flex: 1; 
+  height: 4px; 
+  background: #333; 
+  border-radius: 2px; 
+  overflow: hidden;   /* ← added from second */
+}
+
+.progress-fill { 
+  height: 100%; 
+  background: #fff; 
+  border-radius: 2px; 
+}
+
+/* --- Artist Profile Header --- */
+.artist-header {
+  display: flex;
+  align-items: flex-end;
+  gap: 30px;
+  padding: 40px 50px;
+  background: linear-gradient(to bottom, #333, transparent);
+}
+
+.artist-header img {
+  width: 200px; 
+  height: 200px;
+  border-radius: 50%;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+  object-fit: cover;
+}
+
+/* New Style for Album Detail Header */
+.album-header {
+  display: flex;
+  gap: 40px;
+  padding: 40px 50px;
+  align-items: center;
+}
+.album-header img {
+  width: 260px; height: 260px;
+  border-radius: 12px;
+  box-shadow: 0 10px 50px rgba(0,0,0,0.6);
+}
+.album-list-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-bottom: 1px solid #222;
+  color: #aaa;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.album-list-row:hover { background: #222; color: #fff; }

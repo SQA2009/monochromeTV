@@ -11,3 +11,8 @@ Includes search history and caching. Can be wrapped as an Android/TV app or used
 cd backend/
 npm install
 node server.js
+```
+
+## Credits and Attribution
+
+This project uses the [Material Design Icons](github.com) provided by Google, licensed under the Apache License 2.0.

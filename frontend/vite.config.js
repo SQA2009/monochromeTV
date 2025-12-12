@@ -12,11 +12,13 @@ export default defineConfig({
       '/stream': 'http://localhost:5000',
     }
   },
+  // This handles the build/serve phase
   esbuild: {
-    loader: 'jsx',
+    loader: "jsx",
     include: /src\/.*\.js$/,
     exclude: [],
   },
+  // This handles the dependency scanning phase (where your error is happening)
   optimizeDeps: {
     esbuildOptions: {
       loader: {

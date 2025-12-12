@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 
-export default function Player({ track, activeServerUrl, onNext, onPrev }) {
+export default function Player({ track, onNext, onPrev }) {
   const audioRef = useRef(null);
   const [audioSrc, setAudioSrc] = useState(null);
   const [loading, setLoading] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [duration, setDuration] = useState(0);
+  const [duration, setDuration] = useState(0); 
   const [error, setError] = useState(false);
   
-  // New State for Audio Specs
   const [specs, setSpecs] = useState(null);
+  const [fixedDuration, setFixedDuration] = useState(null); 
 
   useEffect(() => {
     if (!track) return;
@@ -21,37 +21,49 @@ export default function Player({ track, activeServerUrl, onNext, onPrev }) {
       setError(false);
       setAudioSrc(null);
       setSpecs(null);
+      setFixedDuration(null);
 
       try {
-        // Send the active server in headers
-        const res = await fetch(`/stream/${track.id}`, {
-          headers: { 'x-server-url': activeServerUrl }
-        });
+        const queryToUse = track.query || track.title;
+        const targetTitle = track.exactTitle || track.title;
+        
+        const url = `/stream?q=${encodeURIComponent(queryToUse)}&title=${encodeURIComponent(targetTitle)}`;
+        const res = await fetch(url);
         const data = await res.json();
 
         if (data.link) {
           setAudioSrc(data.link);
-          setSpecs(data.specs); // Capture the specs from backend
+          setSpecs(data.specs);
+          // Parse duration "4:24" -> seconds
+          if (data.metadata && data.metadata.duration) {
+             const parts = data.metadata.duration.split(':');
+             if (parts.length === 2) {
+                 const min = parseInt(parts[0]);
+                 const sec = parseInt(parts[1]);
+                 if (!isNaN(min) && !isNaN(sec)) {
+                     setFixedDuration(min * 60 + sec);
+                 }
+             }
+          }
         } else {
           setError(true);
         }
       } catch (e) {
-        console.error("Stream fetch failed", e);
+        console.error("Stream failed", e);
         setError(true);
       }
       setLoading(false);
     };
 
     resolveAudio();
-  }, [track, activeServerUrl]);
+  }, [track]);
 
   useEffect(() => {
     if (audioSrc && audioRef.current) {
       audioRef.current.load();
-      const playPromise = audioRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise.then(() => setPlaying(true)).catch(() => setPlaying(false));
-      }
+      audioRef.current.play()
+        .then(() => setPlaying(true))
+        .catch(() => setPlaying(false));
     }
   }, [audioSrc]);
 
@@ -64,7 +76,9 @@ export default function Player({ track, activeServerUrl, onNext, onPrev }) {
   const handleTimeUpdate = () => {
     if (audioRef.current) {
       setProgress(audioRef.current.currentTime);
-      setDuration(audioRef.current.duration || 0);
+      if (!fixedDuration) {
+          setDuration(audioRef.current.duration || 0);
+      }
     }
   };
 
@@ -77,11 +91,7 @@ export default function Player({ track, activeServerUrl, onNext, onPrev }) {
     return `${m}:${s < 10 ? '0' + s : s}`;
   };
 
-  // Format Sample Rate (e.g., 44100 -> 44.1 kHz)
-  const fmtHz = (hz) => {
-    if (!hz) return "";
-    return `${(hz / 1000).toFixed(1).replace('.0', '')} kHz`;
-  };
+  const finalDuration = fixedDuration || duration;
 
   return (
     <div className="player-bar">
@@ -105,20 +115,14 @@ export default function Player({ track, activeServerUrl, onNext, onPrev }) {
             {track.artist || "Unknown"}
           </div>
           
-          {/* TECHNICAL DETAILS TAGS */}
           <div style={{marginTop: 4, display:'flex', gap: 6, alignItems:'center'}}>
              {loading && <span className="lossless-badge" style={{background:'#444'}}>LOADING...</span>}
              {error && <span className="lossless-badge" style={{background:'#E60023'}}>UNAVAILABLE</span>}
              
              {!loading && !error && specs && (
-               <>
-                 <span className={`lossless-badge ${specs.bitDepth > 16 ? 'tag-hires' : 'tag-lossless'}`}>
-                    {specs.quality || "LOSSLESS"}
-                 </span>
-                 <span style={{fontSize:'0.7rem', color:'#888', fontWeight:'bold'}}>
-                    {specs.bitDepth}-BIT / {fmtHz(specs.sampleRate)} {specs.audioMode}
-                 </span>
-               </>
+               <span className="lossless-badge tag-lossless">
+                  {specs.quality || "LOSSLESS"}
+               </span>
              )}
           </div>
         </div>
@@ -135,9 +139,9 @@ export default function Player({ track, activeServerUrl, onNext, onPrev }) {
       <div className="player-progress">
         <span className="time-text">{fmt(progress)}</span>
         <div className="progress-bar-bg">
-          <div className="progress-fill" style={{ width: `${(progress / (duration || 1)) * 100}%` }} />
+          <div className="progress-fill" style={{ width: `${(progress / (finalDuration || 1)) * 100}%` }} />
         </div>
-        <span className="time-text">{fmt(duration)}</span>
+        <span className="time-text">{fmt(finalDuration)}</span>
       </div>
     </div>
   );

@@ -1,19 +1,20 @@
-# MonochromeTV Music Search
+# Tidal UI TV Wrapper
 
 ## Overview
 
-MonochromeTV is a specialized TV application wrapper for the [monochrome.tf](https://monochrome.tf/) music streaming service.  
-It’s designed for Google TV and Android TV platforms (not optimized for smartphones).  
-You can search for music, jump through your search history, and enjoy faster usage with built-in caching.
+This is a specialized TV application wrapper designed for music streaming instances running **[@uimaxbai/tidal-ui](https://github.com/uimaxbai/tidal-ui)**.
+
+It is designed specifically for **Google TV** and **Android TV** platforms (not optimized for smartphones). It allows you to search for music, browse history, and navigate easily using a TV remote on any supported instance, such as:
+- `https://music.binimum.org/`
+- `https://tidal.squid.wtf/`
 
 ## Features
 
-- Search for music via the monochrome.tf backend
-- Browse and reuse your previous searches
-- Response caching for quicker browsing
-- TV-friendly remote navigation interface
-- Can be packaged as an Android TV/Google TV app
-- Usable as a standalone web app on supported TV browsers
+- **Universal Support**: Works with any backend instance running `@uimaxbai/tidal-ui`.
+- **TV-First Design**: Optimized navigation for TV remotes.
+- **Search History**: Browse and reuse your previous searches.
+- **Performance**: Built-in response caching for faster browsing.
+- **Flexible Deployment**: Can be packaged as an Android TV/Google TV app or used as a standalone web app on supported TV browsers.
 
 ## Getting Started
 
@@ -21,43 +22,56 @@ You can search for music, jump through your search history, and enjoy faster usa
 
 Requires [Node.js](https://nodejs.org/).
 
-```bash
-cd backend/
-npm install
-node server.js
-```
+1. Navigate to the backend directory:
+   ```bash
+   cd backend/
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the server:
+   ```bash
+   node server.js
+   ```
 
 ### Frontend (TV/Web)
 
 Requires [Node.js](https://nodejs.org/).
 
-```bash
-cd frontend/src
-npm install
-npm start
-```
+1. Navigate to the frontend source directory:
+   ```bash
+   cd frontend/src
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the application:
+   ```bash
+   npm start
+   ```
 
-Open the provided local server link in your TV or desktop web browser, or package it into a TV app using a WebView solution.
+Once started, open the provided local server link in your TV or desktop web browser, or package it into a TV app using a WebView solution.
 
 > **Note:**  
-> The app is NOT designed for smartphones or small-screen browsers; it's tailored for TV screens and remotes.
+> The app is **NOT** designed for smartphones or small-screen browsers; it is tailored specifically for TV screens and remote navigation.
 
 ## Usage
 
-- Search by artist, track, or album
-- Use your TV remote or compatible keyboard to navigate results
-- Previous searches can be revisited for convenience
-- Search responses are cached during your session for speed
+- **Connect**: Point the application to your preferred `@uimaxbai/tidal-ui` instance.
+- **Search**: Find music by artist, track, or album.
+- **Navigate**: Use your TV remote (D-pad) or compatible keyboard.
+- **Cache**: Enjoy faster load times with session-based caching.
 
 ## Technology Stack
 
-- JavaScript (backend & frontend)
-- HTML
-- Node.js
-- monochrome.tf API
+- **JavaScript**: Backend & Frontend logic.
+- **HTML**: Structure.
+- **Node.js**: Runtime environment.
+- **@uimaxbai/tidal-ui**: The underlying music streaming interface.
 
 ## Credits
 
-Uses the [Material Design Icons](https://github.com/google/material-design-icons) by Google.
-
-Music streaming features powered by [monochrome.tf](https://monochrome.tf/).
+- **Icons**: [Material Design Icons](https://github.com/google/material-design-icons) by Google.
+- **Backend API Source**: Compatible with instances of @uimaxbai/tidal-ui [@uimaxbai/tidal-ui](https://github.com/uimaxbai/tidal-ui).
